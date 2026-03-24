@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WARPOINT - Личный кабинет</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%);
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .cabinet {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.98);
+            border-radius: 48px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        .header {
+            background: linear-gradient(135deg, #0F172A, #1E293B);
+            padding: 28px 40px;
+            color: white;
+        }
+        .header h2 { font-size: 28px; margin-bottom: 8px; }
+        .stats { display: flex; gap: 24px; margin-top: 16px; }
+        .stat { background: rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 40px; font-size: 14px; }
+        .content { padding: 32px 40px; }
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .profile-card {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(139,92,246,0.3);
+        }
+        .profile-card-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            margin-bottom: 16px;
+        }
+        .profile-card-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: #0F172A; }
+        .profile-card-status { font-size: 12px; color: #64748B; margin-bottom: 12px; }
+        .profile-card-rating {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .rating-positive { color: #10B981; }
+        .rating-negative { color: #EF4444; }
+        .profile-card-stats { display: flex; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #E2E8F0; }
+        .online-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: white;
+        }
+        .online-badge.online { background: #10B981; }
+        .online-badge.offline { background: #94A3B8; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+            border-radius: 48px;
+            max-width: 500px;
+            width: 90%;
+            padding: 32px;
+            color: white;
+            border: 1px solid rgba(139,92,246,0.4);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-header h3 { font-size: 24px; }
+        .modal-close { background: none; border: none; font-size: 28px; color: white; cursor: pointer; }
+        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .info-label { color: #94A3B8; }
+        .info-value { font-weight: 600; color: #FBBF24; }
+        .btn-close { width: 100%; margin-top: 24px; padding: 12px; background: rgba(255,255,255,0.1); border: none; border-radius: 24px; color: white; cursor: pointer; font-weight: 600; }
+        .btn-close:hover { background: rgba(255,255,255,0.2); }
+        .loading { text-align: center; padding: 60px; color: #94A3B8; font-size: 16px; }
+    </style>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+</head>
+<body>
+<div class="cabinet">
+    <div class="header">
+        <h2>👥 Личный кабинет WARPOINT</h2>
+        <div class="stats">
+            <div class="stat">👥 <span id="totalEmployees">0</span> сотрудников</div>
+            <div class="stat">🟢 <span id="onlineCount">0</span> на смене</div>
+        </div>
+    </div>
+    <div class="content">
+        <div id="profilesGrid" class="profiles-grid">
+            <div class="loading">⏳ Загрузка данных...</div>
+        </div>
+    </div>
+</div>
+
+<div id="employeeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>👤 Профиль сотрудника</h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div id="modalBody">
+            <div class="info-row"><span class="info-label">👤 Имя</span><span class="info-value" id="modalName">—</span></div>
+            <div class="info-row"><span class="info-label">🎭 Статус</span><span class="info-value" id="modalStatus">—</span></div>
+            <div class="info-row"><span class="info-label">💰 Монеты</span><span class="info-value" id="modalCoins">—</span></div>
+            <div class="info-row"><span class="info-label">⭐ Рейтинг</span><span class="info-value" id="modalRating">—</span></div>
+            <div class="info-row"><span class="info-label">🏆 Звание</span><span class="info-value" id="modalTitle">—</span></div>
+            <button class="btn-close" onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== КОНФИГУРАЦИЯ FIREBASE ====================
+    const firebaseConfig = {
+        apiKey: "AIzaSyCIa_Usm9qINnuXe9X4YSu2CZYUGEEG2a0",
+        authDomain: "warpoint-realtime.firebaseapp.com",
+        databaseURL: "https://warpoint-realtime-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "warpoint-realtime",
+        storageBucket: "warpoint-realtime.firebasestorage.app",
+        appId: "1:454095956020:web:ab07abc9834f5d1e764261"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    
+    // ========== СПИСОК СОТРУДНИКОВ ==========
+    const EMPLOYEES = [
+        'Иван Петров',
+        'Мария Иванова',
+        'Алексей Смирнов',
+        'Елена Васильева',
+        'Дмитрий Соколов'
+    ];
+    
+    let profiles = {};
+    let currentEmployee = null;
+    
+    const titles = [
+        { min: -1000, max: 0, title: '🌱 Новичок' },
+        { min: 1, max: 50, title: '⭐ Ученик' },
+        { min: 51, max: 150, title: '🔥 Мастер' },
+        { min: 151, max: 300, title: '🏆 Эксперт' },
+        { min: 301, max: 500, title: '💎 Профессионал' },
+        { min: 501, max: 9999, title: '👑 Легенда' }
+    ];
+    
+    function getTitleByRating(rating) {
+        for (let t of titles) {
+            if (rating >= t.min && rating <= t.max) return t.title;
+        }
+        return '🌱 Новичок';
+    }
+    
+    // Простой онлайн-статус (пока случайный)
+    function isOnline(employeeName) {
+        return Math.random() > 0.5;
+    }
+    
+    // Подписка на изменения профилей
+    db.ref('profiles').on('value', (snapshot) => {
+        profiles = snapshot.val() || {};
+        console.log('📁 Профили обновлены:', Object.keys(profiles).length);
+        renderGrid();
+    });
+    
+    function renderGrid() {
+        const grid = document.getElementById('profilesGrid');
+        if (!grid) return;
+        
+        let onlineCount = 0;
+        
+        if (!EMPLOYEES || EMPLOYEES.length === 0) {
+            grid.innerHTML = '<div class="loading">👥 Нет сотрудников</div>';
+            document.getElementById('totalEmployees').textContent = 0;
+            document.getElementById('onlineCount').textContent = 0;
+            return;
+        }
+        
+        grid.innerHTML = EMPLOYEES.map(emp => {
+            const p = profiles[emp] || { 
+                avatar: '👤', 
+                name: emp, 
+                status: '😊 На чиле', 
+                coins: 100, 
+                rating: 0, 
+                background: 'bg_1' 
+            };
+            const ratingValue = p.rating || 0;
+            const ratingClass = ratingValue >= 0 ? 'rating-positive' : 'rating-negative';
+            const ratingSign = ratingValue >= 0 ? '+' : '';
+            const online = isOnline(emp);
+            if (online) onlineCount++;
+            
+            return `
+                <div class="profile-card" onclick="openEmployee('${emp.replace(/'/g, "\\'")}')">
+                    <div class="profile-card-rating ${ratingClass}">${ratingSign}${ratingValue}</div>
+                    <div class="profile-card-avatar">${p.avatar}</div>
+                    <div class="profile-card-name">${p.name}</div>
+                    <div class="profile-card-status">${p.status}</div>
+                    <div class="profile-card-stats">
+                        <span>💰 ${p.coins} WP</span>
+                    </div>
+                    <div class="online-badge ${online ? 'online' : 'offline'}">${online ? '🟢 На смене' : '⚫ Офлайн'}</div>
+                </div>
+            `;
+        }).join('');
+        
+        document.getElementById('totalEmployees').textContent = EMPLOYEES.length;
+        document.getElementById('onlineCount').textContent = onlineCount;
+    }
+    
+    function openEmployee(emp) {
+        currentEmployee = emp;
+        const p = profiles[emp] || { 
+            avatar: '👤', 
+            name: emp, 
+            status: '😊 На чиле', 
+            coins: 100, 
+            rating: 0, 
+            background: 'bg_1' 
+        };
+        
+        document.getElementById('modalName').textContent = p.name;
+        document.getElementById('modalStatus').textContent = p.status;
+        document.getElementById('modalCoins').textContent = p.coins;
+        document.getElementById('modalRating').textContent = p.rating;
+        document.getElementById('modalTitle').textContent = getTitleByRating(p.rating);
+        
+        document.getElementById('employeeModal').classList.add('active');
+    }
+    
+    function closeModal() {
+        document.getElementById('employeeModal').classList.remove('active');
+        currentEmployee = null;
+    }
+    
+    // Создаём профили в Firebase, если их нет
+    console.log('🚀 Создаём профили для сотрудников:', EMPLOYEES);
+    EMPLOYEES.forEach(emp => {
+        db.ref(`profiles/${emp}`).once('value', snapshot => {
+            if (!snapshot.exists()) {
+                db.ref(`profiles/${emp}`).set({
+                    avatar: '👤',
+                    name: emp,
+                    status: '😊 На чиле',
+                    coins: 100,
+                    rating: 0,
+                    background: 'bg_1'
+                });
+                console.log('✅ Создан профиль:', emp);
+            } else {
+                console.log('📁 Профиль уже есть:', emp);
+            }
+        });
+    });
+    
+    renderGrid();
+    
+    window.openEmployee = openEmployee;
+    window.closeModal = closeModal;
+</script>
+</body>
+</html>
