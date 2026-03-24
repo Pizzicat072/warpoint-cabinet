@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(-100px) translateX(50px); }
+        }
+        
+        .cabinet {
+            max-width: 1600px;
+            width: 100%;
+            min-width: 1400px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 48px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.6s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .cabinet-header {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            padding: 28px 48px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cabinet-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent);
+            border-radius: 50%;
+            animation: pulse 4s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border-radius: 32px;
+            padding: 32px 40px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        .welcome-content { position: relative; z-index: 1; }
+        
+        .greeting-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .welcome-emoji {
+            font-size: 64px;
+            animation: wave 2s ease-in-out infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+        }
+        
+        .welcome-text {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .welcome-subtext {
+            font-size: 16px;
+            color: #A78BFA;
+        }
+        
+        .leader-card {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,165,0,0.2));
+            border: 1px solid #FFD700;
+            border-radius: 20px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .leader-icon {
+            font-size: 32px;
+            display: inline-block;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+        
+        .leader-info {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .leader-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #FFD700;
+        }
+        
+        .leader-rating {
+            font-size: 14px;
+            color: #FFD700;
+        }
+        
+        .leaders-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .leader-badge {
+            background: rgba(255,215,0,0.3);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            color: #FFD700;
+        }
+        
+        .dynamic-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(139, 92, 246, 0.3);
+            flex-wrap: wrap;
+        }
+        
+        .dynamic-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 20px;
+            border-radius: 40px;
+        }
+        
+        .dynamic-stat-icon { font-size: 24px; }
+        .dynamic-stat-value { font-size: 20px; font-weight: 700; color: white; }
+        .dynamic-stat-label { font-size: 11px; color: #94A3B8; }
+        
+        .motivation-quote {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border-left: 4px solid #8B5CF6;
+        }
+        
+        .quote-text { font-size: 14px; color: #CBD5E1; font-style: italic; margin-bottom: 8px; }
+        .quote-author { font-size: 12px; color: #8B5CF6; }
+        
+        .time-display {
+            position: absolute;
+            top: 28px;
+            right: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 14px;
+            color: #A78BFA;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 28px;
+            right: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 44px;
+            height: 44px;
+            border-radius: 22px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #94A3B8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .sync-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #10B981;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+        }
+        
+        .sync-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-top-color: #10B981;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+        
+        .profile-card {
+            border-radius: 28px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            min-height: 320px;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.3);
+        }
+        
+        .profile-card-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .profile-card-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .profile-card-status {
+            font-size: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .profile-card-rating {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 28px;
+            font-weight: 800;
+            z-index: 10;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .profile-card-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            z-index: 5;
+        }
+        
+        .profile-card-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+        
+        .profile-card-stat-value {
+            font-weight: 700;
+        }
+        
+        .rating-positive {
+            color: #10B981 !important;
+        }
+        
+        .rating-negative {
+            color: #EF4444 !important;
+        }
+        
+        .online-badge {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            z-index: 10;
+        }
+        
+        .online-badge.online {
+            background: rgba(16, 185, 129, 0.9);
+        }
+        
+        .online-badge.offline {
+            background: rgba(107, 114, 128, 0.9);
+        }
+        
+        .gift-sticker {
+            position: absolute;
+            font-size: 48px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+            pointer-events: none;
+            z-index: 15;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+            white-space: nowrap;
+        }
+        
+        .sticker-count {
+            position: absolute;
+            bottom: -8px;
+            right: -8px;
+            background: rgba(0,0,0,0.7);
+            color: #FBBF24;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 20px;
+            white-space: nowrap;
+            backdrop-filter: blur(4px);
+        }
+        
+        /* ==================== АНИМАЦИИ ДЛЯ ФОНОВ ==================== */
+        @keyframes softGlow {
+            0% { opacity: 0.3; transform: scale(0.95); }
+            100% { opacity: 0.8; transform: scale(1); }
+        }
+        
+        @keyframes sparkles {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+        
+        @keyframes bubbles {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+        
+        @keyframes fallingStars {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(300px) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes magicRings {
+            0% { transform: scale(0.5) rotate(0deg); opacity: 0.5; }
+            100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+        }
+        
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .sparkle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,215,0,0.8), rgba(255,215,0,0));
+            border-radius: 50%;
+            animation: sparkleGlow 2s infinite;
+        }
+        
+        @keyframes sparkleGlow {
+            0% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+        
+        .bubble {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.4), rgba(255,255,255,0));
+            border-radius: 50%;
+            animation: bubbleFloat 4s infinite ease-in-out;
+        }
+        
+        @keyframes bubbleFloat {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            50% { transform: translateY(-30px) scale(1); opacity: 0.6; }
+            100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+        }
+        
+        .falling-star {
+            position: absolute;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: fallingStar 5s linear infinite;
+        }
+        
+        @keyframes fallingStar {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(300px) rotate(360deg); opacity: 0; }
+        }
+        
+        .magic-circle {
+            position: absolute;
+            border: 2px solid rgba(139,92,246,0.6);
+            border-radius: 50%;
+            animation: magicPulse 3s infinite;
+        }
+        
+        @keyframes magicPulse {
+            0% { transform: scale(0.5); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        
+        .profile-card {
+            transition: all 0.3s ease;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        @keyframes stinkPulse {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(0,255,0,0.3)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 15px rgba(0,255,0,0.6)); transform: scale(1.05); }
+        }
+        
+        @keyframes rottenPulse {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(255,100,0,0.4)); transform: rotate(-5deg); }
+            50% { filter: drop-shadow(0 0 15px rgba(255,100,0,0.8)); transform: rotate(5deg) scale(1.05); }
+        }
+        
+        @keyframes sockSmell {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(100,50,0,0.4)); transform: translateY(0px); }
+            50% { filter: drop-shadow(0 0 15px rgba(100,50,0,0.8)); transform: translateY(-5px) scale(1.05); }
+        }
+        
+        @keyframes flowerFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(5deg); }
+        }
+        
+        @keyframes chocolateWobble {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-5deg) scale(1.05); }
+            75% { transform: rotate(5deg) scale(1.05); }
+        }
+        
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); text-shadow: 0 0 10px gold; }
+        }
+        
+        /* ==================== МОДАЛЬНЫЕ ОКНА ==================== */
+        .employee-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+        
+        .employee-modal.active { display: flex; }
+        
+        .modal-container {
+            border-radius: 48px;
+            max-width: 1100px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            position: relative;
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 40px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        
+        .modal-header h2 { font-size: 28px; font-weight: 700; color: white; }
+        .modal-close {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 22px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #94A3B8;
+            transition: 0.2s;
+        }
+        .modal-close:hover { color: white; transform: rotate(90deg); }
+        .modal-body { padding: 32px 40px; }
+        
+        .profile-row { display: flex; gap: 32px; margin-bottom: 32px; flex-wrap: wrap; }
+        .avatar-wrapper { position: relative; cursor: pointer; }
+        .avatar-large {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            transition: 0.2s;
+        }
+        .avatar-wrapper:hover .avatar-large { transform: scale(1.05); }
+        .avatar-edit {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background: #1E293B;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border: 2px solid white;
+            cursor: pointer;
+        }
+        .info-fields { flex: 1; }
+        .name-input {
+            width: 100%;
+            font-size: 28px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 20px;
+            padding: 12px 20px;
+            font-family: inherit;
+            margin-bottom: 16px;
+            color: white;
+        }
+        .name-input:focus { outline: none; border-color: #8B5CF6; }
+        .profile-badges { 
+            display: flex; 
+            gap: 16px; 
+            flex-wrap: wrap; 
+            align-items: center;
+            margin-top: 8px;
+        }
+        .wallet-badge {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid #FBBF24;
+            padding: 10px 20px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #FBBF24;
+        }
+        .badge {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #E2E8F0;
+        }
+        .badge:hover {
+            background: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+        .badge-primary {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            border: none;
+            color: white;
+        }
+        .btn-steal-profile {
+            background: linear-gradient(135deg, #1F2937, #111827);
+            border: 1px solid #EF4444;
+            color: #EF4444;
+        }
+        .btn-steal-profile:hover {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            border-color: transparent;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 32px; font-weight: 800; color: #FBBF24; }
+        .stat-label { font-size: 12px; color: #94A3B8; margin-top: 6px; }
+        .gifts-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+        .gifts-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #A78BFA;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gifts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .gift-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .gift-card.positive { border-left: 3px solid #10B981; }
+        .gift-card.negative { border-left: 3px solid #EF4444; }
+        .gift-info { display: flex; align-items: center; gap: 12px; }
+        .gift-icon { font-size: 32px; }
+        .gift-name { font-size: 14px; font-weight: 600; color: #E2E8F0; }
+        .gift-sender { font-size: 11px; color: #94A3B8; }
+        .gift-timer {
+            font-size: 12px;
+            font-family: monospace;
+            color: #FBBF24;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        .tab {
+            padding: 12px 28px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #94A3B8;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab.active {
+            color: #8B5CF6;
+            border-bottom: 2px solid #8B5CF6;
+        }
+        .tab-panel {
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .tab-panel.active { display: block; }
+        .stats-cards { display: flex; flex-direction: column; gap: 16px; }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .stat-card:hover { background: rgba(139,92,246,0.15); transform: translateX(5px); }
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(139,92,246,0.3);
+        }
+        .stat-card-title { font-size: 18px; font-weight: 600; color: #A78BFA; }
+        .stat-card-content { display: flex; justify-content: space-around; gap: 20px; }
+        .stat-card-item { text-align: center; flex: 1; }
+        .stat-card-item-value { font-size: 28px; font-weight: 800; color: #FBBF24; }
+        .stat-card-item-label { font-size: 11px; color: #94A3B8; margin-top: 4px; }
+        .total-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .total-stat {
+            background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2));
+            border-radius: 20px;
+            padding: 16px;
+            text-align: center;
+        }
+        .total-stat-value { font-size: 36px; font-weight: 800; color: #FBBF24; }
+        .total-stat-label { font-size: 12px; color: #94A3B8; margin-top: 4px; }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .achievement-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+        }
+        .achievement-card.unlocked {
+            background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(236,72,153,0.15));
+            border: 1px solid rgba(139,92,246,0.5);
+        }
+        .achievement-card.locked { opacity: 0.6; filter: grayscale(0.3); }
+        .achievement-icon { font-size: 48px; }
+        .achievement-info { flex: 1; }
+        .achievement-name { font-size: 16px; font-weight: 600; color: #E2E8F0; margin-bottom: 4px; }
+        .achievement-desc { font-size: 11px; color: #94A3B8; }
+        .achievement-reward { font-size: 12px; color: #FBBF24; margin-top: 4px; }
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .action-btn {
+            padding: 14px;
+            border-radius: 48px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .action-btn:hover { transform: translateY(-2px); }
+        .btn-save { background: linear-gradient(135deg, #10B981, #059669); color: white; }
+        .btn-shop { background: linear-gradient(135deg, #F59E0B, #D97706); color: white; }
+        .btn-inventory { background: linear-gradient(135deg, #8B5CF6, #6366F1); color: white; }
+        .btn-mail { background: linear-gradient(135deg, #EC4899, #DB2777); color: white; }
+        .btn-steal { background: linear-gradient(135deg, #EF4444, #DC2626); color: white; }
+        .btn-transfer { background: linear-gradient(135deg, #3B82F6, #2563EB); color: white; }
+        .mail-badge {
+            background: #EF4444;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2100;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-window {
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+            border-radius: 32px;
+            padding: 28px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+        .modal-window h3 { color: white; font-size: 24px; margin-bottom: 20px; text-align: center; }
+        .amount-input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(139,92,246,0.3);
+            border-radius: 24px;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .risk-info {
+            text-align: center;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            margin: 15px 0;
+            color: #FBBF24;
+        }
+        .shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+        .shop-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #E2E8F0;
+        }
+        .shop-card:hover { background: rgba(139, 92, 246, 0.3); transform: scale(1.05); }
+        .shop-avatar { font-size: 40px; margin-bottom: 6px; }
+        .shop-bg-preview { height: 60px; border-radius: 12px; margin-bottom: 6px; }
+        .use-tag { font-size: 10px; background: rgba(16, 185, 129, 0.3); padding: 3px 8px; border-radius: 20px; color: #10B981; margin-top: 6px; display: inline-block; }
+        .status-list { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+        .status-option { padding: 12px 16px; background: rgba(255,255,255,0.05); border-radius: 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #E2E8F0; }
+        .status-option:hover { background: rgba(139, 92, 246, 0.3); }
+        .gift-item { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; margin-bottom: 8px; color: #E2E8F0; }
+        .gift-item:hover { background: rgba(139, 92, 246, 0.3); transform: translateX(5px); }
+        .recipient-search input { width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(139,92,246,0.3); border-radius: 24px; color: white; margin-bottom: 16px; }
+        .recipients-grid { display: grid; gap: 10px; max-height: 300px; overflow-y: auto; }
+        .recipient-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; color: #E2E8F0; transition: 0.2s; margin-bottom: 8px; }
+        .recipient-card:hover { background: rgba(139, 92, 246, 0.3); transform: translateX(5px); }
+        .recipient-card.disabled { opacity: 0.5; cursor: not-allowed; }
+        .recipient-card.disabled:hover { background: rgba(255,255,255,0.05); transform: none; }
+        .recipient-avatar { width: 45px; height: 45px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .inventory-items { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .inv-item { background: rgba(139, 92, 246, 0.2); border-radius: 12px; padding: 8px 12px; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; color: #E2E8F0; }
+        .inv-item:hover { background: rgba(139, 92, 246, 0.4); transform: scale(1.05); }
+        .mail-list { display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; }
+        .mail-message { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 12px; border-left: 3px solid #8B5CF6; color: #E2E8F0; }
+        .close-modal { width: 100%; margin-top: 20px; padding: 12px; background: rgba(255,255,255,0.1); border: none; border-radius: 24px; color: #94A3B8; cursor: pointer; font-weight: 600; }
+        .close-modal:hover { background: rgba(255,255,255,0.2); color: white; }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1E293B;
+            border-radius: 16px;
+            padding: 14px 20px;
+            z-index: 2200;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .notification.error { border-left: 4px solid #EF4444; background: #2D1F2A; }
+        .notification.success { border-left: 4px solid #10B981; background: #1F2A2A; }
+        .notification.info { border-left: 4px solid #3B82F6; background: #1F2A3A; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        .spinner { width: 20px; height: 20px; border: 2px solid rgba(139, 92, 246, 0.3); border-top-color: #8B5CF6; border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block; margin-right: 10px; }
+        .selector-block { background: #F8FAFE; border-radius: 24px; padding: 8px 20px; display: inline-block; }
+        .employee-select { padding: 8px 16px; background: white; border: 1px solid #E2E8F0; border-radius: 16px; cursor: pointer; }
+        .gift-quantity-control { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 25px 0; }
+        .quantity-btn { width: 60px; height: 60px; border-radius: 30px; background: rgba(139,92,246,0.3); border: none; color: white; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .quantity-btn:hover { background: rgba(139,92,246,0.6); transform: scale(1.05); }
+        .quantity-number { font-size: 42px; font-weight: bold; color: #FBBF24; min-width: 100px; text-align: center; }
+        .gift-preview-card { background: rgba(139,92,246,0.2); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .gift-preview-icon { font-size: 72px; }
+        .gift-preview-info h4 { color: white; font-size: 22px; }
+        .gift-preview-info p { color: #94A3B8; font-size: 14px; }
+        .total-price { text-align: center; font-size: 20px; color: #FBBF24; margin: 20px 0; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 20px; }
+        .recipient-name { font-weight: 600; color: white; }
+        .recipient-stats { font-size: 12px; color: #94A3B8; }
+    </style>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+</head>
+<body>
+<div class="floating-particles" id="particles"></div>
+
+<div class="cabinet">
+    <div class="cabinet-header">
+        <div class="welcome-card">
+            <div class="welcome-content">
+                <div class="greeting-wrapper">
+                    <span class="welcome-emoji" id="dynamicEmoji">👑</span>
+                    <div>
+                        <div class="welcome-text" id="dynamicGreeting">Привет, WARPOINT!</div>
+                        <div class="welcome-subtext" id="dynamicMessage">✨ Личный кабинет ✨</div>
+                    </div>
+                </div>
+                <div id="leaderBoard" class="leader-card">
+                    <div>
+                        <span class="leader-icon">👑</span>
+                        <div class="leader-info">
+                            <div class="leader-name" id="leaderName">Загрузка...</div>
+                            <div class="leader-rating" id="leaderRating">⭐ рейтинг: 0</div>
+                        </div>
+                    </div>
+                    <div id="leadersList" class="leaders-list"></div>
+                </div>
+                <div class="dynamic-stats">
+                    <div class="dynamic-stat-item"><div class="dynamic-stat-icon">👥</div><div><div class="dynamic-stat-value" id="totalEmployees">0</div><div class="dynamic-stat-label">Сотрудников</div></div></div>
+                    <div class="dynamic-stat-item"><div class="dynamic-stat-icon">🟢</div><div><div class="dynamic-stat-value" id="onlineCount">0</div><div class="dynamic-stat-label">На смене</div></div></div>
+                </div>
+                <div class="motivation-quote"><div class="quote-text" id="quoteText">«Тёмная сделка: риск = количество монет в %! Чем больше хочешь украсть, тем выше риск!»</div><div class="quote-author" id="quoteAuthor">— WARPOINT</div></div>
+            </div>
+        </div>
+        <div class="time-display" id="timeDisplay"></div>
+        <button class="close-btn" onclick="window.close()">✕</button>
+    </div>
+    
+    <div class="cabinet-content" style="padding: 32px 48px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="color: #0F172A; font-size: 24px;">👥 Сотрудники</h2>
+            <div class="selector-block"><select id="employeeSelect" class="employee-select"><option value="">-- Быстрый выбор --</option></select></div>
+        </div>
+        <div id="profilesGrid" class="profiles-grid"></div>
+        <div id="statusDiv" style="display: none;"></div>
+    </div>
+</div>
+
+<div class="sync-indicator" id="syncIndicator">
+    <div class="sync-spinner" id="syncSpinner" style="display: none;"></div>
+    <span id="syncText">Синхронизировано</span>
+</div>
+
+<!-- МОДАЛЬНЫЕ ОКНА (оставляем как есть) -->
+<div id="employeeModal" class="employee-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2>👤 Профиль сотрудника</h2>
+            <button class="modal-close" onclick="closeEmployeeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="profile-row">
+                <div class="avatar-wrapper" onclick="openAvatarShop()">
+                    <div class="avatar-large" id="modalAvatar">👤</div>
+                    <div class="avatar-edit">🎨</div>
+                </div>
+                <div class="info-fields">
+                    <input type="text" id="modalName" class="name-input" placeholder="Имя сотрудника">
+                    <div class="profile-badges">
+                        <div class="wallet-badge">💰 <span id="modalCoins">0</span> WP</div>
+                        <div class="badge" id="modalStatus" onclick="openStatusShop()">😊 <span id="modalStatusText">Активен</span></div>
+                        <div class="badge badge-primary" onclick="openBackgroundShop()">🖼️ Сменить фон</div>
+                        <div class="badge btn-steal-profile" onclick="openStealModal()">🌙 Тёмная сделка</div>
+                        <div class="badge btn-transfer" onclick="openTransferModal()">💸 Перевести монеты</div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item"><div class="stat-number" id="modalRating">0</div><div class="stat-label">Рейтинг</div></div>
+                <div class="stat-item"><div class="stat-number" id="modalTitle">🎮</div><div class="stat-label">Звание</div></div>
+                <div class="stat-item"><div class="stat-number" id="modalTotalHours">0</div><div class="stat-label">Всего часов</div></div>
+                <div class="stat-item"><div class="stat-number" id="modalTotalShifts">0</div><div class="stat-label">Всего смен</div></div>
+                <div class="stat-item"><div class="stat-number" id="modalStatusIcon">🟢</div><div class="stat-label">Статус</div></div>
+            </div>
+            <div id="giftsBox" class="gifts-box">
+                <div class="gifts-title">🎁 Полученные подарки</div>
+                <div id="giftsList" class="gifts-list"></div>
+            </div>
+            <div class="tabs">
+                <button class="tab active" data-tab="stats">📊 Статистика</button>
+                <button class="tab" data-tab="achievements">🏆 Достижения</button>
+            </div>
+            <div class="tab-panel active" id="tabStats">
+                <div id="statsContainer"></div>
+            </div>
+            <div class="tab-panel" id="tabAchievements">
+                <div id="achievementsContainer"></div>
+            </div>
+            <div class="actions-grid">
+                <button class="action-btn btn-save" onclick="saveProfile()">💾 Сохранить</button>
+                <button class="action-btn btn-shop" onclick="openShop()">🛒 Магазин</button>
+                <button class="action-btn btn-inventory" onclick="openInventory()">🎒 Инвентарь</button>
+                <button class="action-btn btn-mail" onclick="openMail()">📬 Почта <span id="mailBadge" class="mail-badge">0</span></button>
+                <button class="action-btn btn-transfer" onclick="openTransferModal()">💸 Перевести</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="stealModal" class="modal-overlay"><div class="modal-window"><h3>🌙 Тёмная сделка</h3><div id="stealContent"></div><button class="close-modal" onclick="closeStealModal()">Отмена</button></div></div>
+<div id="transferModal" class="modal-overlay"><div class="modal-window"><h3>💸 Перевод монет</h3><div id="transferContent"></div><button class="close-modal" onclick="closeTransferModal()">Отмена</button></div></div>
+<div id="shopModal" class="modal-overlay"><div class="modal-window"><h3>🛒 Магазин</h3><div style="display:flex; gap:12px; flex-wrap:wrap;"><button onclick="closeShop(); openAvatarShop();" style="flex:1; background:linear-gradient(135deg,#8B5CF6,#EC4899); border:none; border-radius:24px; padding:12px; color:white;">🎨 Аватары</button><button onclick="closeShop(); openStatusShop();" style="flex:1; background:linear-gradient(135deg,#F59E0B,#D97706); border:none; border-radius:24px; padding:12px; color:white;">✨ Статусы</button><button onclick="closeShop(); openBackgroundShop();" style="flex:1; background:linear-gradient(135deg,#06B6D4,#0891B2); border:none; border-radius:24px; padding:12px; color:white;">🖼️ Фоны</button><button onclick="closeShop(); openGiftShop();" style="flex:1; background:linear-gradient(135deg,#10B981,#059669); border:none; border-radius:24px; padding:12px; color:white;">🎁 Подарки</button></div><button class="close-modal" onclick="closeShop()">Закрыть</button></div></div>
+<div id="avatarShop" class="modal-overlay"><div class="modal-window"><h3>🎨 Аватары</h3><div id="avatarList" class="shop-grid"></div><button class="close-modal" onclick="closeAvatarShop()">Назад</button></div></div>
+<div id="backgroundShop" class="modal-overlay"><div class="modal-window"><h3>🖼️ Фоны</h3><div id="backgroundList" class="shop-grid"></div><button class="close-modal" onclick="closeBackgroundShop()">Назад</button></div></div>
+<div id="statusShop" class="modal-overlay"><div class="modal-window"><h3>✨ Статусы</h3><div id="statusList" class="status-list"></div><button class="close-modal" onclick="closeStatusShop()">Назад</button></div></div>
+<div id="giftShop" class="modal-overlay"><div class="modal-window"><h3>🎁 Подарки</h3><div id="giftList"></div><button class="close-modal" onclick="closeGiftShop()">Закрыть</button></div></div>
+<div id="quantityModal" class="modal-overlay"><div class="modal-window"><h3>📦 Количество</h3><div id="quantityContent"></div><div style="display:flex; gap:12px;"><button onclick="confirmQuantity()" style="flex:1; background:#10B981; border:none; border-radius:24px; padding:12px; color:white;">✅ Отправить</button><button onclick="closeQuantityModal()" style="flex:1; background:rgba(255,255,255,0.1); border:none; border-radius:24px; padding:12px; color:white;">❌ Отмена</button></div></div></div>
+<div id="sendGiftModal" class="modal-overlay"><div class="modal-window"><h3>🎁 Получатель</h3><div id="sendGiftContent"></div><button class="close-modal" onclick="closeSendGift()">Отмена</button></div></div>
+<div id="inventoryModal" class="modal-overlay"><div class="modal-window"><h3>🎒 Инвентарь</h3><div id="inventoryContent"></div><button class="close-modal" onclick="closeInventory()">Закрыть</button></div></div>
+<div id="mailModal" class="modal-overlay"><div class="modal-window"><h3>📬 Сообщения</h3><div id="mailList"></div><div style="display:flex; gap:12px;"><button onclick="clearMail()" style="flex:1; background:#EF4444; border:none; border-radius:24px; padding:12px; color:white;">🗑️ Очистить</button><button onclick="closeMail()" style="flex:1; background:rgba(255,255,255,0.1); border:none; border-radius:24px; padding:12px; color:white;">Закрыть</button></div></div></div>
+
+<script>
+// ==================== КОНФИГУРАЦИЯ FIREBASE ====================
+const firebaseConfig = {
+    apiKey: "AIzaSyCIa_Usm9qINnuXe9X4YSu2CZYUGEEG2a0",
+    authDomain: "warpoint-realtime.firebaseapp.com",
+    databaseURL: "https://warpoint-realtime-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "warpoint-realtime",
+    storageBucket: "warpoint-realtime.firebasestorage.app",
+    appId: "1:454095956020:web:ab07abc9834f5d1e764261"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
+let employees = ['Иван Петров', 'Мария Иванова', 'Алексей Смирнов', 'Елена Васильева', 'Дмитрий Соколов'];
+let currentEmp = '';
+let profiles = {};
+let gifts = {};
+let scheduleData = {};
+let selectedGift = null;
+let selectedQuantity = 1;
+let giftStickers = {};
+
+// Списки для магазина (ваши данные)
+const backgroundsList = [
+    { id: 'bg_1', name: 'Тёмный сапфир', gradient: 'linear-gradient(135deg, #0F172A, #1E1B4B)', textColor: '#E2E8F0', cardTextColor: '#F1F5F9', accentColor: '#8B5CF6', animationType: 'none' },
+    { id: 'bg_2', name: 'Глубокий индиго', gradient: 'linear-gradient(135deg, #1E1B4B, #2D2A5E)', textColor: '#E0E7FF', cardTextColor: '#F5F3FF', accentColor: '#A78BFA', animationType: 'none' },
+    { id: 'bg_3', name: 'Изумрудный лес', gradient: 'linear-gradient(135deg, #064E3B, #065F46)', textColor: '#D1FAE5', cardTextColor: '#ECFDF5', accentColor: '#10B981', animationType: 'none' },
+    { id: 'bg_4', name: 'Багряный закат', gradient: 'linear-gradient(135deg, #7F1A1A, #991B1B)', textColor: '#FECACA', cardTextColor: '#FEF2F2', accentColor: '#EF4444', animationType: 'none' },
+    { id: 'bg_5', name: 'Золотые пески', gradient: 'linear-gradient(135deg, #B45309, #D97706)', textColor: '#FEF3C7', cardTextColor: '#FFFBEB', accentColor: '#F59E0B', animationType: 'none' },
+    { id: 'bg_6', name: 'Лавандовый туман', gradient: 'linear-gradient(135deg, #4C1D95, #5B21B6)', textColor: '#EDE9FE', cardTextColor: '#F5F3FF', accentColor: '#C084FC', animationType: 'softGlow' },
+    { id: 'bg_7', name: 'Морская глубина', gradient: 'linear-gradient(135deg, #155E75, #0E7C9E)', textColor: '#CFFAFE', cardTextColor: '#ECFEFF', accentColor: '#06B6D4', animationType: 'softGlow' },
+    { id: 'bg_8', name: 'Лунная ночь', gradient: 'linear-gradient(135deg, #312E81, #3730A3)', textColor: '#E0E7FF', cardTextColor: '#EEF2FF', accentColor: '#818CF8', animationType: 'softGlow' },
+    { id: 'bg_9', name: 'Вишнёвый сад', gradient: 'linear-gradient(135deg, #831843, #9D174D)', textColor: '#FCE7F3', cardTextColor: '#FDF2F8', accentColor: '#EC4899', animationType: 'softGlow' },
+    { id: 'bg_10', name: 'Оливковая роща', gradient: 'linear-gradient(135deg, #3F6212, #4D7C0F)', textColor: '#ECFCCB', cardTextColor: '#F7FEE7', accentColor: '#84CC16', animationType: 'softGlow' },
+    { id: 'bg_11', name: 'Мистический аметист', gradient: 'linear-gradient(135deg, #7C3AED, #8B5CF6, #A78BFA)', textColor: '#F5F3FF', cardTextColor: '#FFFFFF', accentColor: '#C4B5FD', animationType: 'sparkles' },
+    { id: 'bg_12', name: 'Бирюзовая лагуна', gradient: 'linear-gradient(135deg, #0891B2, #06B6D4, #22D3EE)', textColor: '#CFFAFE', cardTextColor: '#FFFFFF', accentColor: '#67E8F9', animationType: 'bubbles' },
+    { id: 'bg_13', name: 'Огненный феникс', gradient: 'linear-gradient(135deg, #D97706, #F59E0B, #FBBF24)', textColor: '#FEF3C7', cardTextColor: '#FFFFFF', accentColor: '#FDE047', animationType: 'sparkles' },
+    { id: 'bg_14', name: 'Золотая империя', gradient: 'linear-gradient(135deg, #FFD700, #FFA500, #FF8C00)', textColor: '#FFF5E6', cardTextColor: '#FFFFFF', accentColor: '#FFD966', animationType: 'fallingStars' },
+    { id: 'bg_15', name: 'Космическое сияние', gradient: 'linear-gradient(135deg, #A855F7, #7C3AED, #6D28D9, #4C1D95)', textColor: '#F5F3FF', cardTextColor: '#FFFFFF', accentColor: '#C084FC', animationType: 'magicRings' }
+];
+
+const giftsList = [
+    { id: 'flower', name: '🌸 Букет цветов', icon: '🌸', price: 10, effect: 'positive', ratingChange: 5, desc: '+5 рейтинга' },
+    { id: 'chocolate', name: '🍫 Коробка шоколада', icon: '🍫', price: 15, effect: 'positive', ratingChange: 8, desc: '+8 рейтинга' },
+    { id: 'star', name: '⭐ Золотая звезда', icon: '⭐', price: 25, effect: 'positive', ratingChange: 15, desc: '+15 рейтинга' },
+    { id: 'trophy', name: '🏆 Трофей', icon: '🏆', price: 50, effect: 'positive', ratingChange: 30, desc: '+30 рейтинга' },
+    { id: 'poop', name: '💩 Какашка', icon: '💩', price: 5, effect: 'negative', ratingChange: -10, desc: '-10 рейтинга' },
+    { id: 'rotten', name: '🥚 Тухлое яйцо', icon: '🥚', price: 5, effect: 'negative', ratingChange: -8, desc: '-8 рейтинга' },
+    { id: 'sock', name: '🧦 Вонючий носок', icon: '🧦', price: 8, effect: 'negative', ratingChange: -12, desc: '-12 рейтинга' }
+];
+
+const statusesList = [
+    { name: '😊 На чиле', price: 0 }, { name: '💼 Весь в работе', price: 0 }, { name: '☕ Чаи гоняю', price: 0 },
+    { name: '🎉 Отдыхаю', price: 0 }, { name: '💪 Бью рекорды', price: 0 }, { name: '🌟 Вдохновлён', price: 0 },
+    { name: '⚡ Заряжен', price: 0 }, { name: '🏆 Чемпион', price: 0 }
+];
+
+const avatarsList = [
+    { icon: '👤', price: 0 }, { icon: '😊', price: 0 }, { icon: '🔥', price: 0 }, { icon: '⭐', price: 0 },
+    { icon: '🚀', price: 0 }, { icon: '🎮', price: 0 }, { icon: '🏆', price: 0 }, { icon: '💪', price: 0 },
+    { icon: '🦸', price: 0 }, { icon: '🧙', price: 0 }, { icon: '🐉', price: 0 }, { icon: '👑', price: 0 }
+];
+
+const achievementsData = [
+    { name: 'Первые шаги', icon: '🌱', hours: 50, desc: 'Отработать 50 часов', reward: '+100 WP' },
+    { name: 'Звёздный час', icon: '⭐', hours: 150, desc: 'Отработать 150 часов', reward: '+200 WP' },
+    { name: 'Трудовой подвиг', icon: '🏆', hours: 300, desc: 'Отработать 300 часов', reward: '+500 WP' },
+    { name: 'Железный человек', icon: '💪', shifts: 50, desc: 'Отработать 50 смен', reward: '+150 WP' },
+    { name: 'Ветеран труда', icon: '⚡', shifts: 100, desc: 'Отработать 100 смен', reward: '+300 WP' },
+    { name: 'Мастер своего дела', icon: '🏅', hours: 500, desc: 'Отработать 500 часов', reward: '+1000 WP' }
+];
+
+const titles = [
+    { min: -1000, max: 0, title: '🌱 Новичок' },
+    { min: 1, max: 50, title: '⭐ Ученик' },
+    { min: 51, max: 150, title: '🔥 Мастер' },
+    { min: 151, max: 300, title: '🏆 Эксперт' },
+    { min: 301, max: 500, title: '💎 Профессионал' },
+    { min: 501, max: 9999, title: '👑 Легенда' }
+];
+
+// ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+function getTitleByRating(rating) {
+    for (let t of titles) {
+        if (rating >= t.min && rating <= t.max) return t.title;
+    }
+    return '🌱 Новичок';
+}
+
+function getBackgroundById(id) {
+    return backgroundsList.find(b => b.id === id) || backgroundsList[0];
+}
+
+function showNotif(msg, type) {
+    let n = document.createElement('div');
+    n.className = `notification ${type}`;
+    n.innerHTML = `<div>${msg}</div>`;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 3000);
+}
+
+function escapeHtml(s) {
+    if (!s) return '';
+    return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+}
+
+function addGiftStickersToCard(card, stickers) {
+    if (!card || !stickers || !stickers.length) return;
+    let existing = card.querySelectorAll('.gift-sticker');
+    existing.forEach(s => s.remove());
+    let stickerMap = new Map();
+    stickers.forEach(s => { let key = s.icon; stickerMap.set(key, (stickerMap.get(key) || 0) + 1); });
+    stickerMap.forEach((count, icon) => {
+        let stickerDiv = document.createElement('div');
+        stickerDiv.className = 'gift-sticker';
+        stickerDiv.innerHTML = icon + (count > 1 ? `<span class="sticker-count">×${count}</span>` : '');
+        stickerDiv.style.cssText = `left:${15 + Math.random() * 70}%;top:${10 + Math.random() * 70}%;font-size:${40 + Math.random() * 30}px;transform:rotate(${-15 + Math.random() * 30}deg)`;
+        card.appendChild(stickerDiv);
+    });
+}
+
+// ==================== АНИМАЦИИ ДЛЯ ФОНОВ ====================
+function startBackgroundAnimation(card, animationType) {
+    if (!card) return;
+    let existingAnim = card.querySelector('.bg-animation');
+    if (existingAnim) existingAnim.remove();
+    
+    if (animationType === 'none') return;
+    
+    let animDiv = document.createElement('div');
+    animDiv.className = 'bg-animation';
+    
+    if (animationType === 'softGlow') {
+        animDiv.style.animation = 'softGlow 3s ease-in-out infinite';
+        animDiv.style.background = 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%)';
+    } else if (animationType === 'sparkles') {
+        for (let i = 0; i < 15; i++) {
+            let sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.width = Math.random() * 8 + 3 + 'px';
+            sparkle.style.height = sparkle.style.width;
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            sparkle.style.animationDuration = Math.random() * 2 + 1 + 's';
+            animDiv.appendChild(sparkle);
+        }
+    } else if (animationType === 'bubbles') {
+        for (let i = 0; i < 8; i++) {
+            let bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.bottom = '-20px';
+            bubble.style.width = Math.random() * 40 + 10 + 'px';
+            bubble.style.height = bubble.style.width;
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+            bubble.style.animationDuration = Math.random() * 6 + 3 + 's';
+            animDiv.appendChild(bubble);
+        }
+    } else if (animationType === 'fallingStars') {
+        for (let i = 0; i < 5; i++) {
+            let star = document.createElement('div');
+            star.className = 'falling-star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = '-50px';
+            star.style.width = Math.random() * 15 + 10 + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDelay = Math.random() * 8 + 's';
+            star.style.animationDuration = Math.random() * 4 + 3 + 's';
+            animDiv.appendChild(star);
+        }
+    } else if (animationType === 'magicRings') {
+        setInterval(() => {
+            let ring = document.createElement('div');
+            ring.className = 'magic-circle';
+            ring.style.left = Math.random() * 100 + '%';
+            ring.style.top = Math.random() * 100 + '%';
+            ring.style.width = Math.random() * 60 + 20 + 'px';
+            ring.style.height = ring.style.width;
+            ring.style.animation = 'magicPulse 2s ease-out forwards';
+            animDiv.appendChild(ring);
+            setTimeout(() => ring.remove(), 2000);
+        }, 3000);
+    }
+    
+    card.appendChild(animDiv);
+}
+
+// ==================== ОНЛАЙН СТАТУС ====================
+function isEmployeeOnShift(employeeName) {
+    if (!scheduleData[employeeName]) return false;
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const dayNames = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+    const todayName = dayNames[dayOfWeek];
+    return scheduleData[employeeName][todayName] === true;
+}
+
+function updateOnlineCount() {
+    let online = employees.filter(emp => isEmployeeOnShift(emp)).length;
+    let onlineEl = document.getElementById('onlineCount');
+    if (onlineEl) onlineEl.textContent = online;
+}
+
+// ==================== ПОДПИСКА НА FIREBASE ====================
+db.ref('profiles').on('value', (snapshot) => {
+    profiles = snapshot.val() || {};
+    renderGrid();
+    if (currentEmp) updateModal();
+    updateLeaderBoard();
+    updateOnlineCount();
+    let syncText = document.getElementById('syncText');
+    if (syncText) syncText.textContent = 'Синхронизировано';
+    let syncSpinner = document.getElementById('syncSpinner');
+    if (syncSpinner) syncSpinner.style.display = 'none';
+});
+
+db.ref('gifts').on('value', (snapshot) => {
+    gifts = snapshot.val() || {};
+    updateGiftStickers();
+    if (currentEmp) renderGiftsList();
+    renderGrid();
+});
+
+// ==================== ОПЕРАЦИИ С FIREBASE ====================
+function updateProfile(updates) {
+    if (!currentEmp) return;
+    
+    let syncText = document.getElementById('syncText');
+    let syncSpinner = document.getElementById('syncSpinner');
+    if (syncSpinner) syncSpinner.style.display = 'inline-block';
+    if (syncText) syncText.textContent = 'Сохранение...';
+    
+    db.ref(`profiles/${currentEmp}`).update(updates)
+        .then(() => {
+            if (syncSpinner) syncSpinner.style.display = 'none';
+            if (syncText) syncText.textContent = 'Синхронизировано';
+            showNotif(`✅ Профиль сохранён`, 'success');
+        })
+        .catch(error => {
+            if (syncSpinner) syncSpinner.style.display = 'none';
+            if (syncText) syncText.textContent = 'Ошибка';
+            showNotif(`❌ Ошибка: ${error.message}`, 'error');
+        });
+}
+
+function saveProfile() {
+    if (!currentEmp) return;
+    let newName = document.getElementById('modalName').value;
+    if (newName && newName !== profiles[currentEmp]?.name) {
+        updateProfile({ name: newName });
+    }
+}
+
+function sendGift(recipient, gift, quantity) {
+    let senderProfile = profiles[currentEmp];
+    let totalPrice = gift.price * quantity;
+    
+    if (!senderProfile) {
+        showNotif('❌ Профиль не найден', 'error');
+        return;
+    }
+    if (senderProfile.coins < totalPrice) {
+        showNotif('❌ Недостаточно средств', 'error');
+        return;
+    }
+    
+    let syncText = document.getElementById('syncText');
+    let syncSpinner = document.getElementById('syncSpinner');
+    if (syncSpinner) syncSpinner.style.display = 'inline-block';
+    if (syncText) syncText.textContent = 'Отправка...';
+    
+    const updates = {};
+    updates[`profiles/${currentEmp}/coins`] = senderProfile.coins - totalPrice;
+    updates[`profiles/${recipient}/rating`] = (profiles[recipient]?.rating || 0) + (gift.ratingChange * quantity);
+    
+    const newGiftRef = db.ref(`gifts/${recipient}`).push();
+    updates[`gifts/${recipient}/${newGiftRef.key}`] = {
+        id: gift.id,
+        icon: gift.icon,
+        name: gift.name,
+        effect: gift.effect,
+        ratingChange: gift.ratingChange,
+        sender: currentEmp,
+        sendDate: new Date().toISOString(),
+        expireDate: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
+    };
+    
+    db.ref().update(updates)
+        .then(() => {
+            if (syncSpinner) syncSpinner.style.display = 'none';
+            if (syncText) syncText.textContent = 'Синхронизировано';
+            showNotif(`✅ ${quantity}x ${gift.name} отправлен!`, 'success');
+        })
+        .catch(error => {
+            if (syncSpinner) syncSpinner.style.display = 'none';
+            if (syncText) syncText.textContent = 'Ошибка';
+            showNotif(`❌ Ошибка: ${error.message}`, 'error');
+        });
+}
+
+function transferCoins(to, amount) {
+    let senderProfile = profiles[currentEmp];
+    
+    if (!senderProfile) {
+        showNotif('❌ Профиль не найден', 'error');
+        return;
+    }
+    if (senderProfile.coins < amount) {
+        showNotif('❌ Недостаточно средств', 'error');
+        return;
+    }
+    
+    let syncText = document.getElementById('syncText');
+    let syncSpinner = document.getElementById('syncSpinner');
+    if (syncSpinner) syncSpinner.style.display = 'inline-block';
+    if (syncText) syncText.textContent = 'Перевод...';
+    
+    const updates = {};
+    updates[`profiles/${currentEmp}/coins`] = senderProfile.coins - amount;
+    updates[`profiles/${to}/coins`] = (profiles[to]?.coins || 0) + amount;
+    
+    db.ref().update(updates)
+        .then(() => {
+            if (syncSpinner) syncSpinner.style.display = 'none';
+            if (syncText) syncText.textContent = 'Синхронизировано';
+            showNotif(`✅ Переведено ${amount} WP!`, 'success');
+        })
+        .catch(error => {
+            if (syncSpinner) syncSpinner.style.display = 'none';
+            if (syncText) syncText.textContent = 'Ошибка';
+            showNotif(`❌ Ошибка: ${error.message}`, 'error');
+        });
+}
+
+function performSteal(target, amount) {
+    let stealerProfile = profiles[currentEmp];
+    let targetProfile = profiles[target];
+    
+    if (!stealerProfile || !targetProfile) {
+        showNotif('❌ Профиль не найден', 'error');
+        return;
+    }
+    
+    let riskPercent = Math.min(amount, 100);
+    let success = Math.random() * 100 >= riskPercent;
+    
+    let syncText = document.getElementById('syncText');
+    let syncSpinner = document.getElementById('syncSpinner');
+    if (syncSpinner) syncSpinner.style.display = 'inline-block';
+    if (syncText) syncText.textContent = 'Сделка...';
+    
+    const updates = {};
+    
+    if (success && targetProfile.coins >= amount) {
+        updates[`profiles/${currentEmp}/coins`] = (stealerProfile.coins || 0) + amount;
+        updates[`profiles/${target}/coins`] = targetProfile.coins - amount;
+        
+        db.ref().update(updates)
+            .then(() => {
+                if (syncSpinner) syncSpinner.style.display = 'none';
+                if (syncText) syncText.textContent = 'Синхронизировано';
+                showNotif(`✅ Украдено ${amount} WP!`, 'success');
+            })
+            .catch(error => {
+                if (syncSpinner) syncSpinner.style.display = 'none';
+                if (syncText) syncText.textContent = 'Ошибка';
+                showNotif(`❌ Ошибка: ${error.message}`, 'error');
+            });
+    } else {
+        updates[`profiles/${currentEmp}/rating`] = (stealerProfile.rating || 0) - riskPercent;
+        
+        db.ref().update(updates)
+            .then(() => {
+                if (syncSpinner) syncSpinner.style.display = 'none';
+                if (syncText) syncText.textContent = 'Синхронизировано';
+                showNotif(`❌ Провал! Рейтинг -${riskPercent}`, 'error');
+            })
+            .catch(error => {
+                if (syncSpinner) syncSpinner.style.display = 'none';
+                if (syncText) syncText.textContent = 'Ошибка';
+                showNotif(`❌ Ошибка: ${error.message}`, 'error');
+            });
+    }
+}
+
+// ==================== ОТОБРАЖЕНИЕ ====================
+function renderGrid() {
+    let grid = document.getElementById('profilesGrid');
+    if (!grid) return;
+    if (!employees.length) {
+        grid.innerHTML = '<div style="text-align:center;padding:60px;">👥 Нет сотрудников</div>';
+        return;
+    }
+    
+    grid.innerHTML = employees.map(emp => {
+        let p = profiles[emp] || { avatar: '👤', name: emp, status: '😊 На чиле', coins: 100, rating: 0, background: 'bg_1' };
+        let bg = getBackgroundById(p.background);
+        const ratingValue = p.rating || 0;
+        const ratingColorClass = ratingValue >= 0 ? 'rating-positive' : 'rating-negative';
+        const ratingSign = ratingValue >= 0 ? '+' : '';
+        const isOnline = isEmployeeOnShift(emp);
+        return `<div class="profile-card" style="background: ${bg.gradient};" data-emp="${emp}" data-animation="${bg.animationType}" onclick="openEmployee('${emp.replace(/'/g, "\\'")}')">
+            <div class="profile-card-rating ${ratingColorClass}">${ratingSign}${ratingValue}</div>
+            <div class="profile-card-avatar">${p.avatar}</div>
+            <div class="profile-card-name" style="color: ${bg.cardTextColor};">${escapeHtml(p.name || emp)}</div>
+            <div class="profile-card-status" style="color: ${bg.cardTextColor};">${p.status}</div>
+            <div class="profile-card-stats"><div class="profile-card-stat">💰 <span class="profile-card-stat-value" style="color: ${bg.accentColor};">${p.coins}</span></div></div>
+            <div class="online-badge ${isOnline ? 'online' : 'offline'}">${isOnline ? '🟢 На смене' : '⚫ Офлайн'}</div>
+        </div>`;
+    }).join('');
+    
+    let totalEl = document.getElementById('totalEmployees');
+    if (totalEl) totalEl.textContent = employees.length;
+    updateOnlineCount();
+    updateLeaderBoard();
+    
+    setTimeout(() => {
+        employees.forEach(emp => {
+            let card = document.querySelector(`.profile-card[data-emp="${emp}"]`);
+            if (card) {
+                let bg = getBackgroundById(profiles[emp]?.background || 'bg_1');
+                startBackgroundAnimation(card, bg.animationType);
+                let stickers = giftStickers[emp] || [];
+                if (stickers.length > 0) {
+                    addGiftStickersToCard(card, stickers);
+                }
+            }
+        });
+    }, 100);
+}
+
+function updateCard(emp) {
+    let p = profiles[emp];
+    if (!p) return;
+    let card = document.querySelector(`.profile-card[data-emp="${emp}"]`);
+    if (card) {
+        const bg = getBackgroundById(p.background);
+        card.style.background = bg.gradient;
+        card.setAttribute('data-animation', bg.animationType);
+        
+        let avatarEl = card.querySelector('.profile-card-avatar');
+        if (avatarEl) avatarEl.innerHTML = p.avatar;
+        let nameEl = card.querySelector('.profile-card-name');
+        if (nameEl) {
+            nameEl.innerHTML = p.name;
+            nameEl.style.color = bg.cardTextColor;
+        }
+        let statusEl = card.querySelector('.profile-card-status');
+        if (statusEl) {
+            statusEl.innerHTML = p.status;
+            statusEl.style.color = bg.cardTextColor;
+        }
+        const ratingValue = p.rating;
+        const ratingColorClass = ratingValue >= 0 ? 'rating-positive' : 'rating-negative';
+        const ratingSign = ratingValue >= 0 ? '+' : '';
+        const ratingEl = card.querySelector('.profile-card-rating');
+        if (ratingEl) {
+            ratingEl.innerHTML = `${ratingSign}${ratingValue}`;
+            ratingEl.className = `profile-card-rating ${ratingColorClass}`;
+        }
+        let statValue = card.querySelectorAll('.profile-card-stat-value')[0];
+        if (statValue) {
+            statValue.textContent = p.coins;
+            statValue.style.color = bg.accentColor;
+        }
+        const isOnline = isEmployeeOnShift(emp);
+        const onlineBadge = card.querySelector('.online-badge');
+        if (onlineBadge) {
+            onlineBadge.innerHTML = isOnline ? '🟢 На смене' : '⚫ Офлайн';
+            onlineBadge.className = `online-badge ${isOnline ? 'online' : 'offline'}`;
+        }
+        
+        startBackgroundAnimation(card, bg.animationType);
+    }
+    updateLeaderBoard();
+}
+
+function updateLeaderBoard() {
+    if (!employees.length) return;
+    let maxRating = -Infinity;
+    let leaders = [];
+    for (let emp of employees) {
+        const rating = profiles[emp]?.rating || 0;
+        if (rating > maxRating) {
+            maxRating = rating;
+            leaders = [emp];
+        } else if (rating === maxRating && maxRating !== -Infinity) {
+            leaders.push(emp);
+        }
+    }
+    const leaderNames = leaders.map(l => profiles[l]?.name || l).join(', ');
+    let leaderNameEl = document.getElementById('leaderName');
+    let leaderRatingEl = document.getElementById('leaderRating');
+    let leadersListEl = document.getElementById('leadersList');
+    if (leaderNameEl) leaderNameEl.innerHTML = `🏆 Лидеры (${maxRating}⭐)`;
+    if (leaderRatingEl) leaderRatingEl.innerHTML = `${leaderNames}`;
+    if (leadersListEl) {
+        let leadersHtml = '';
+        leaders.forEach(l => {
+            leadersHtml += `<span class="leader-badge">${profiles[l]?.name || l} (${maxRating})</span>`;
+        });
+        leadersListEl.innerHTML = leadersHtml;
+    }
+}
+
+function updateGiftStickers() {
+    giftStickers = {};
+    for (let emp in gifts) {
+        if (gifts[emp] && gifts[emp].length) {
+            giftStickers[emp] = gifts[emp].map(g => ({ icon: g.icon, time: Date.now() }));
+        }
+    }
+    renderGrid();
+}
+
+function renderGiftsList() {
+    const container = document.getElementById('giftsList');
+    if (!container) return;
+    const giftsArr = gifts[currentEmp] || [];
+    if (giftsArr.length === 0) {
+        container.innerHTML = '<div style="padding:20px;text-align:center;">🎁 Нет подарков</div>';
+        return;
+    }
+    const now = Date.now();
+    const activeGifts = giftsArr.filter(g => new Date(g.expireDate).getTime() > now);
+    container.innerHTML = activeGifts.map(g => `<div class="gift-card ${g.effect}"><div class="gift-info"><span class="gift-icon">${g.icon}</span><div><div class="gift-name">${g.name}</div><div class="gift-sender">от ${g.sender}</div></div></div><div class="gift-timer">48ч</div></div>`).join('');
+}
+
+function updateModal() {
+    if (!currentEmp) return;
+    let p = profiles[currentEmp] || { avatar: '👤', name: currentEmp, status: '😊 На чиле', coins: 100, rating: 0, background: 'bg_1' };
+    let nameInput = document.getElementById('modalName');
+    let modalAvatar = document.getElementById('modalAvatar');
+    let modalStatusText = document.getElementById('modalStatusText');
+    let modalCoins = document.getElementById('modalCoins');
+    let modalRating = document.getElementById('modalRating');
+    let modalTitle = document.getElementById('modalTitle');
+    let modalStatusIcon = document.getElementById('modalStatusIcon');
+    
+    if (nameInput) nameInput.value = p.name || currentEmp;
+    if (modalAvatar) modalAvatar.innerHTML = p.avatar || '👤';
+    if (modalStatusText) modalStatusText.innerHTML = (p.status || '😊 На чиле');
+    if (modalCoins) modalCoins.textContent = p.coins || 0;
+    const ratingValue = p.rating || 0;
+    const ratingColorClass = ratingValue >= 0 ? 'rating-positive' : 'rating-negative';
+    if (modalRating) {
+        modalRating.innerHTML = `${ratingValue >= 0 ? '+' : ''}${ratingValue}`;
+        modalRating.className = `stat-number ${ratingColorClass}`;
+    }
+    if (modalTitle) modalTitle.innerHTML = getTitleByRating(p.rating || 0);
+    const isOnline = isEmployeeOnShift(currentEmp);
+    if (modalStatusIcon) modalStatusIcon.innerHTML = isOnline ? '🟢 На смене' : '⚫ Офлайн';
+    renderGiftsList();
+}
+
+function openEmployee(emp) {
+    currentEmp = emp;
+    let p = profiles[emp] || { avatar: '👤', name: emp, status: '😊 На чиле', coins: 100, rating: 0, background: 'bg_1' };
+    let nameInput = document.getElementById('modalName');
+    let modalAvatar = document.getElementById('modalAvatar');
+    let modalStatusText = document.getElementById('modalStatusText');
+    let modalCoins = document.getElementById('modalCoins');
+    let modalRating = document.getElementById('modalRating');
+    let modalTitle = document.getElementById('modalTitle');
+    
+    if (nameInput) nameInput.value = p.name || emp;
+    if (modalAvatar) modalAvatar.innerHTML = p.avatar || '👤';
+    if (modalStatusText) modalStatusText.innerHTML = (p.status || '😊 На чиле');
+    if (modalCoins) modalCoins.textContent = p.coins || 0;
+    const ratingValue = p.rating || 0;
+    const ratingColorClass = ratingValue >= 0 ? 'rating-positive' : 'rating-negative';
+    if (modalRating) {
+        modalRating.innerHTML = `${ratingValue >= 0 ? '+' : ''}${ratingValue}`;
+        modalRating.className = `stat-number ${ratingColorClass}`;
+    }
+    if (modalTitle) modalTitle.innerHTML = getTitleByRating(p.rating || 0);
+    
+    let modal = document.getElementById('employeeModal');
+    if (modal) modal.classList.add('active');
+    
+    renderGiftsList();
+    loadEmployeeStats();
+}
+
+function closeEmployeeModal() {
+    let modal = document.getElementById('employeeModal');
+    if (modal) modal.classList.remove('active');
+    currentEmp = null;
+}
+
+function loadEmployeeStats() {
+    let totalHoursEl = document.getElementById('modalTotalHours');
+    let totalShiftsEl = document.getElementById('modalTotalShifts');
+    if (totalHoursEl) totalHoursEl.textContent = '0';
+    if (totalShiftsEl) totalShiftsEl.textContent = '0';
+    let container = document.getElementById('statsContainer');
+    if (container) {
+        container.innerHTML = '<div style="text-align:center;padding:40px;">📊 Данные загружаются из графика</div>';
+    }
+    renderAchievements(0, 0);
+}
+
+function renderAchievements(hours, shifts) {
+    const container = document.getElementById('achievementsContainer');
+    if (!container) return;
+    let html = `<div class="achievements-grid">`;
+    achievementsData.forEach(a => {
+        let unlocked = (a.hours && hours >= a.hours) || (a.shifts && shifts >= a.shifts);
+        html += `<div class="achievement-card ${unlocked ? 'unlocked' : 'locked'}"><div class="achievement-icon">${a.icon}</div><div><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc}</div><div class="achievement-reward">🎁 ${a.reward}</div></div><div>${unlocked ? '✅' : '🔒'}</div></div>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+// ==================== МАГАЗИН ====================
+function openShop() { let el = document.getElementById('shopModal'); if (el) el.classList.add('active'); }
+function closeShop() { let el = document.getElementById('shopModal'); if (el) el.classList.remove('active'); }
+
+function openAvatarShop() {
+    let html = avatarsList.map(a => `<div class="shop-card" onclick="useAvatar('${a.icon}')"><div class="shop-avatar">${a.icon}</div><div class="use-tag">✓ Использовать</div></div>`).join('');
+    let el = document.getElementById('avatarList');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('avatarShop');
+    if (modal) modal.classList.add('active');
+}
+
+function useAvatar(icon) {
+    updateProfile({ avatar: icon });
+    closeAvatarShop();
+}
+
+function closeAvatarShop() { let el = document.getElementById('avatarShop'); if (el) el.classList.remove('active'); }
+
+function openBackgroundShop() {
+    let html = backgroundsList.map(bg => `<div class="shop-card" onclick="useBackground('${bg.id}')"><div class="shop-bg-preview" style="background:${bg.gradient}; height:50px;"></div><div>${bg.name}</div><div class="use-tag">✓ Использовать</div></div>`).join('');
+    let el = document.getElementById('backgroundList');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('backgroundShop');
+    if (modal) modal.classList.add('active');
+}
+
+function useBackground(id) {
+    updateProfile({ background: id });
+    closeBackgroundShop();
+}
+
+function closeBackgroundShop() { let el = document.getElementById('backgroundShop'); if (el) el.classList.remove('active'); }
+
+function openStatusShop() {
+    let html = statusesList.map(s => `<div class="status-option" onclick="useStatus('${s.name.replace(/'/g, "\\'")}')"><span>${s.name}</span><span class="use-tag">✓</span></div>`).join('');
+    let el = document.getElementById('statusList');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('statusShop');
+    if (modal) modal.classList.add('active');
+}
+
+function useStatus(name) {
+    updateProfile({ status: name });
+    closeStatusShop();
+}
+
+function closeStatusShop() { let el = document.getElementById('statusShop'); if (el) el.classList.remove('active'); }
+
+function openGiftShop() {
+    let html = giftsList.map(g => `<div class="gift-item" onclick="selectGift('${g.id}')"><div style="font-size:40px;">${g.icon}</div><div><b>${g.name}</b><div>${g.desc}</div><div>💰 ${g.price} WP</div></div></div>`).join('');
+    let el = document.getElementById('giftList');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('giftShop');
+    if (modal) modal.classList.add('active');
+}
+
+function selectGift(id) {
+    selectedGift = giftsList.find(g => g.id === id);
+    openQuantityModal();
+}
+
+function closeGiftShop() { let el = document.getElementById('giftShop'); if (el) el.classList.remove('active'); }
+
+function openQuantityModal() {
+    selectedQuantity = 1;
+    let html = `<div class="gift-preview-card"><div style="font-size:60px;">${selectedGift.icon}</div><div><h4>${selectedGift.name}</h4><p>${selectedGift.desc}</p><p>💰 ${selectedGift.price} WP за штуку</p></div></div><div class="gift-quantity-control"><button class="quantity-btn" onclick="changeQuantity(-1)">-</button><span class="quantity-number" id="quantityNumber">1</span><button class="quantity-btn" onclick="changeQuantity(1)">+</button></div><div class="total-price" id="totalPrice">💰 Итого: ${selectedGift.price} WP</div>`;
+    let el = document.getElementById('quantityContent');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('quantityModal');
+    if (modal) modal.classList.add('active');
+    closeGiftShop();
+}
+
+function changeQuantity(delta) {
+    let newVal = selectedQuantity + delta;
+    if (newVal >= 1 && newVal <= 99) {
+        selectedQuantity = newVal;
+        let qn = document.getElementById('quantityNumber');
+        let tp = document.getElementById('totalPrice');
+        if (qn) qn.textContent = selectedQuantity;
+        if (tp) tp.innerHTML = `💰 Итого: ${selectedGift.price * selectedQuantity} WP`;
+    }
+}
+
+function confirmQuantity() {
+    closeQuantityModal();
+    openRecipientSelection();
+}
+
+function closeQuantityModal() { let el = document.getElementById('quantityModal'); if (el) el.classList.remove('active'); }
+
+function openRecipientSelection() {
+    let recipients = employees.filter(e => e !== currentEmp);
+    let html = `<div class="recipient-search"><input type="text" id="searchRecipient" placeholder="🔍 Поиск..." onkeyup="filterRecipients()"></div><div id="recipientsList" class="recipients-grid"></div>`;
+    let el = document.getElementById('sendGiftContent');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('sendGiftModal');
+    if (modal) modal.classList.add('active');
+    renderRecipients(recipients);
+}
+
+function renderRecipients(list) {
+    let grid = document.getElementById('recipientsList');
+    if (!grid) return;
+    if (!list.length) {
+        grid.innerHTML = '<div style="padding:20px;">😢 Нет сотрудников</div>';
+        return;
+    }
+    grid.innerHTML = list.map(emp => {
+        let p = profiles[emp] || { avatar: '👤', name: emp };
+        return `<div class="recipient-card" onclick="confirmSend('${emp.replace(/'/g, "\\'")}')"><div class="recipient-avatar">${p.avatar}</div><div><div class="recipient-name">${p.name || emp}</div></div></div>`;
+    }).join('');
+}
+
+function filterRecipients() {
+    let search = document.getElementById('searchRecipient')?.value.toLowerCase() || '';
+    let filtered = employees.filter(e => e !== currentEmp && (profiles[e]?.name?.toLowerCase().includes(search) || e.toLowerCase().includes(search)));
+    renderRecipients(filtered);
+}
+
+function confirmSend(recipient) {
+    if (selectedGift) {
+        sendGift(recipient, selectedGift, selectedQuantity);
+        closeSendGift();
+        selectedGift = null;
+    }
+}
+
+function closeSendGift() { let el = document.getElementById('sendGiftModal'); if (el) el.classList.remove('active'); }
+
+function openInventory() {
+    let inv = { avatars: avatarsList.map(a => a.icon), statuses: statusesList.map(s => s.name), backgrounds: backgroundsList.map(b => b.id) };
+    let html = `<div><h4>🎨 Аватары</h4><div class="inventory-items">${inv.avatars.map(a => `<div class="inv-item" onclick="useAvatar('${a}')">${a}</div>`).join('')}</div></div><div><h4>✨ Статусы</h4><div class="inventory-items">${inv.statuses.map(s => `<div class="inv-item" onclick="useStatus('${s.replace(/'/g, "\\'")}')">${s}</div>`).join('')}</div></div><div><h4>🖼️ Фоны</h4><div class="inventory-items">${inv.backgrounds.map(b => `<div class="inv-item" onclick="useBackground('${b}')">${backgroundsList.find(bg => bg.id === b)?.name || b}</div>`).join('')}</div></div>`;
+    let el = document.getElementById('inventoryContent');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('inventoryModal');
+    if (modal) modal.classList.add('active');
+}
+
+function closeInventory() { let el = document.getElementById('inventoryModal'); if (el) el.classList.remove('active'); }
+
+function openStealModal() {
+    let victims = employees.filter(e => e !== currentEmp);
+    if (victims.length === 0) {
+        showNotif('❌ Нет других сотрудников', 'error');
+        return;
+    }
+    let html = `<div class="recipient-search"><input type="text" id="stealSearch" placeholder="🔍 Поиск..." onkeyup="filterStealList()"></div><div id="stealListContainer" class="recipients-grid"></div>`;
+    let el = document.getElementById('stealContent');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('stealModal');
+    if (modal) modal.classList.add('active');
+    renderStealList(victims);
+}
+
+function renderStealList(list) {
+    let container = document.getElementById('stealListContainer');
+    if (!container) return;
+    if (!list || list.length === 0) {
+        container.innerHTML = '<div style="padding:40px;text-align:center;">😢 Нет сотрудников</div>';
+        return;
+    }
+    container.innerHTML = list.map(emp => {
+        let p = profiles[emp] || { avatar: '👤', name: emp, coins: 100, rating: 0 };
+        const hasCoins = (p.coins || 0) > 0;
+        return `<div class="recipient-card ${!hasCoins ? 'disabled' : ''}" onclick="${hasCoins ? `openAmountModal('${emp.replace(/'/g, "\\'")}', ${p.coins})` : ''}">
+            <div class="recipient-avatar">${p.avatar}</div>
+            <div><div class="recipient-name">${p.name || emp}</div><div class="recipient-stats">💰 ${p.coins || 0} WP | ⭐ ${p.rating || 0}</div></div>
+        </div>`;
+    }).join('');
+}
+
+function filterStealList() {
+    let search = document.getElementById('stealSearch')?.value.toLowerCase() || '';
+    let filtered = employees.filter(e => e !== currentEmp && (profiles[e]?.name?.toLowerCase().includes(search) || e.toLowerCase().includes(search)));
+    renderStealList(filtered);
+}
+
+function openAmountModal(target, maxCoins) {
+    let html = `<input type="number" id="stealAmount" class="amount-input" placeholder="Сумма (1-${maxCoins})" min="1" max="${maxCoins}" value="10">
+                <div class="risk-info" id="riskInfo">⚠️ Риск: 10% (чем больше сумма, тем выше риск!)</div>
+                <button onclick="confirmSteal('${target.replace(/'/g, "\\'")}')" style="width:100%; padding:14px; background:#EF4444; border:none; border-radius:24px; color:white; cursor:pointer;">🌙 Совершить</button>`;
+    let el = document.getElementById('stealContent');
+    if (el) el.innerHTML = html;
+    let stealAmount = document.getElementById('stealAmount');
+    if (stealAmount) {
+        stealAmount.addEventListener('input', function() {
+            let amount = parseInt(this.value) || 0;
+            let risk = Math.min(amount, 100);
+            let riskInfo = document.getElementById('riskInfo');
+            if (riskInfo) riskInfo.innerHTML = `⚠️ Риск: ${risk}% ${risk >= 100 ? '(100% - гарантированный провал!)' : '(чем больше сумма, тем выше риск!)'}`;
+        });
+    }
+}
+
+function confirmSteal(target) {
+    let stealAmount = document.getElementById('stealAmount');
+    let amount = stealAmount ? parseInt(stealAmount.value) : 0;
+    if (!amount || amount < 1) {
+        showNotif('❌ Введите сумму!', 'error');
+        return;
+    }
+    let targetProfile = profiles[target];
+    if (amount > targetProfile.coins) {
+        showNotif(`❌ У ${targetProfile.name || target} только ${targetProfile.coins} монет!`, 'error');
+        return;
+    }
+    performSteal(target, amount);
+    closeStealModal();
+}
+
+function closeStealModal() { let el = document.getElementById('stealModal'); if (el) el.classList.remove('active'); }
+
+function openTransferModal() {
+    let recipients = employees.filter(e => e !== currentEmp);
+    if (recipients.length === 0) {
+        showNotif('❌ Нет других сотрудников', 'error');
+        return;
+    }
+    let html = `<div class="recipient-search"><input type="text" id="transferSearch" placeholder="🔍 Поиск..." onkeyup="filterTransferList()"></div><div id="transferListContainer" class="recipients-grid"></div>`;
+    let el = document.getElementById('transferContent');
+    if (el) el.innerHTML = html;
+    let modal = document.getElementById('transferModal');
+    if (modal) modal.classList.add('active');
+    renderTransferList(recipients);
+}
+
+function renderTransferList(list) {
+    let container = document.getElementById('transferListContainer');
+    if (!container) return;
+    if (!list || list.length === 0) {
+        container.innerHTML = '<div style="padding:40px;text-align:center;">😢 Нет сотрудников</div>';
+        return;
+    }
+    container.innerHTML = list.map(emp => {
+        let p = profiles[emp] || { avatar: '👤', name: emp, coins: 0 };
+        return `<div class="recipient-card" onclick="openTransferAmountModal('${emp.replace(/'/g, "\\'")}')">
+            <div class="recipient-avatar">${p.avatar}</div>
+            <div><div class="recipient-name">${p.name || emp}</div><div class="recipient-stats">💰 ${p.coins || 0} WP</div></div>
+        </div>`;
+    }).join('');
+}
+
+function filterTransferList() {
+    let search = document.getElementById('transferSearch')?.value.toLowerCase() || '';
+    let filtered = employees.filter(e => e !== currentEmp && (profiles[e]?.name?.toLowerCase().includes(search) || e.toLowerCase().includes(search)));
+    renderTransferList(filtered);
+}
+
+function openTransferAmountModal(target) {
+    let currentCoins = (profiles[currentEmp]?.coins) || 0;
+    let html = `<input type="number" id="transferAmount" class="amount-input" placeholder="Сумма (1-${currentCoins})" min="1" max="${currentCoins}" value="10">
+                <div class="risk-info">💰 У вас: ${currentCoins} WP</div>
+                <button onclick="confirmTransfer('${target.replace(/'/g, "\\'")}')" style="width:100%; padding:14px; background:#3B82F6; border:none; border-radius:24px; color:white; cursor:pointer;">💸 Перевести</button>`;
+    let el = document.getElementById('transferContent');
+    if (el) el.innerHTML = html;
+}
+
+function confirmTransfer(target) {
+    let transferAmount = document.getElementById('transferAmount');
+    let amount = transferAmount ? parseInt(transferAmount.value) : 0;
+    if (!amount || amount < 1) {
+        showNotif('❌ Введите сумму!', 'error');
+        return;
+    }
+    let currentProfile = profiles[currentEmp];
+    if (amount > (currentProfile?.coins || 0)) {
+        showNotif(`❌ У вас только ${currentProfile?.coins || 0} WP!`, 'error');
+        return;
+    }
+    transferCoins(target, amount);
+    closeTransferModal();
+}
+
+function closeTransferModal() { let el = document.getElementById('transferModal'); if (el) el.classList.remove('active'); }
+
+function openMail() {
+    let container = document.getElementById('mailList');
+    if (container) {
+        container.innerHTML = '<div style="padding:40px;">📭 Нет сообщений</div>';
+    }
+    let mailModal = document.getElementById('mailModal');
+    if (mailModal) mailModal.classList.add('active');
+}
+
+function clearMail() {
+    if (confirm('Удалить все сообщения?')) {
+        showNotif('Почта очищена', 'success');
+        openMail();
+    }
+}
+
+function closeMail() {
+    let mailModal = document.getElementById('mailModal');
+    if (mailModal) mailModal.classList.remove('active');
+}
+
+function updateMailBadge() {
+    let badge = document.getElementById('mailBadge');
+    if (badge) badge.textContent = '0';
+}
+
+// ==================== ИНИЦИАЛИЗАЦИЯ ====================
+function updateTime() {
+    let d = new Date();
+    let timeDisplay = document.getElementById('timeDisplay');
+    if (timeDisplay) timeDisplay.textContent = `🕐 ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+    let h = d.getHours();
+    let g = h<5 ? 'Доброй ночи' : (h<12 ? 'Доброе утро' : (h<18 ? 'Добрый день' : 'Добрый вечер'));
+    let e = h<5 ? '🌙' : (h<12 ? '☀️' : (h<18 ? '🎯' : '🌆'));
+    let dynamicEmoji = document.getElementById('dynamicEmoji');
+    let dynamicGreeting = document.getElementById('dynamicGreeting');
+    if (dynamicEmoji) dynamicEmoji.textContent = e;
+    if (dynamicGreeting) dynamicGreeting.innerHTML = `${g}, WARPOINT!`;
+}
+
+function createParticles() {
+    let c = document.getElementById('particles');
+    if (!c) return;
+    for(let i=0;i<50;i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        p.style.width = Math.random()*6+3+'px';
+        p.style.height = p.style.width;
+        p.style.left = Math.random()*100+'%';
+        p.style.top = Math.random()*100+'%';
+        p.style.animationDelay = Math.random()*20+'s';
+        p.style.animationDuration = Math.random()*15+10+'s';
+        c.appendChild(p);
+    }
+}
+
+let quotes = [
+    { text: "Тёмная сделка: риск = количество монет в %! Чем больше хочешь украсть, тем выше риск!", author: "WARPOINT" },
+    { text: "Дарите подарки коллегам — это повышает рейтинг и настроение!", author: "WARPOINT" },
+    { text: "Статус 'На смене' определяется автоматически по графику работы!", author: "WARPOINT" },
+    { text: "Все изменения синхронизируются между пользователями мгновенно!", author: "WARPOINT" }
+];
+let quoteIndex = 0;
+setInterval(() => {
+    let q = quotes[quoteIndex % quotes.length];
+    let quoteText = document.getElementById('quoteText');
+    let quoteAuthor = document.getElementById('quoteAuthor');
+    if (quoteText) quoteText.textContent = `«${q.text}»`;
+    if (quoteAuthor) quoteAuthor.textContent = `— ${q.author}`;
+    quoteIndex++;
+}, 30000);
+
+let employeeSelect = document.getElementById('employeeSelect');
+if (employeeSelect) {
+    employeeSelect.innerHTML = '<option value="">-- Быстрый выбор --</option>';
+    employees.forEach(e => {
+        let opt = document.createElement('option');
+        opt.value = e;
+        opt.textContent = e;
+        employeeSelect.appendChild(opt);
+    });
+    employeeSelect.addEventListener('change', e => {
+        if(e.target.value) openEmployee(e.target.value);
+    });
+}
+
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', function() {
+    document.querySelectorAll('.tab').forEach(t2 => t2.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    let tabId = `tab${this.dataset.tab === 'stats' ? 'Stats' : 'Achievements'}`;
+    let tabPanel = document.getElementById(tabId);
+    if (tabPanel) tabPanel.classList.add('active');
+}));
+
+setInterval(updateTime, 60000);
+updateTime();
+createParticles();
+
+// Создаём профили в Firebase
+console.log('📋 Сотрудники:', employees);
+employees.forEach(emp => {
+    db.ref(`profiles/${emp}`).once('value', snapshot => {
+        if (!snapshot.exists()) {
+            db.ref(`profiles/${emp}`).set({
+                avatar: '👤',
+                name: emp,
+                status: '😊 На чиле',
+                coins: 100,
+                rating: 0,
+                background: 'bg_1'
+            });
+            console.log('✅ Создан профиль:', emp);
+        }
+    });
+});
+
+// Загружаем расписание (пока заглушка)
+scheduleData = {};
+employees.forEach(emp => {
+    const dayNames = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+    scheduleData[emp] = {};
+    dayNames.forEach(day => {
+        scheduleData[emp][day] = Math.random() > 0.5;
+    });
+});
+
+renderGrid();
+
+window.openEmployee = openEmployee;
+window.closeEmployeeModal = closeEmployeeModal;
+window.saveProfile = saveProfile;
+window.openShop = openShop;
+window.closeShop = closeShop;
+window.openAvatarShop = openAvatarShop;
+window.closeAvatarShop = closeAvatarShop;
+window.useAvatar = useAvatar;
+window.openBackgroundShop = openBackgroundShop;
+window.closeBackgroundShop = closeBackgroundShop;
+window.useBackground = useBackground;
+window.openStatusShop = openStatusShop;
+window.closeStatusShop = closeStatusShop;
+window.useStatus = useStatus;
+window.openGiftShop = openGiftShop;
+window.closeGiftShop = closeGiftShop;
+window.selectGift = selectGift;
+window.openQuantityModal = openQuantityModal;
+window.closeQuantityModal = closeQuantityModal;
+window.changeQuantity = changeQuantity;
+window.confirmQuantity = confirmQuantity;
+window.confirmSend = confirmSend;
+window.closeSendGift = closeSendGift;
+window.openInventory = openInventory;
+window.closeInventory = closeInventory;
+window.openMail = openMail;
+window.closeMail = closeMail;
+window.clearMail = clearMail;
+window.filterRecipients = filterRecipients;
+window.openStealModal = openStealModal;
+window.closeStealModal = closeStealModal;
+window.confirmSteal = confirmSteal;
+window.filterStealList = filterStealList;
+window.openAmountModal = openAmountModal;
+window.openTransferModal = openTransferModal;
+window.closeTransferModal = closeTransferModal;
+window.confirmTransfer = confirmTransfer;
+window.filterTransferList = filterTransferList;
+window.openTransferAmountModal = openTransferAmountModal;
+</script>
+</body>
+</html>
